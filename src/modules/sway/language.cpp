@@ -86,7 +86,10 @@ void Language::onEvent(const struct Ipc::ipc_response& res) {
     std::lock_guard<std::mutex> lock(mutex_);
     auto payload = parser_.parse(res.payload)["input"];
     if (payload["type"].asString() == "keyboard") {
-      set_current_layout(payload[XKB_ACTIVE_LAYOUT_NAME_KEY].asString());
+      auto layout_name = payload[XKB_ACTIVE_LAYOUT_NAME_KEY].asString();
+      if (!layout_name.empty()) {
+        set_current_layout(layout_name);
+      }
     }
     dp.emit();
   } catch (const std::exception& e) {
