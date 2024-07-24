@@ -73,7 +73,9 @@ void Language::onEvent(const std::string& ev) {
   auto layoutName = ev.substr(ev.find_last_of(',') + 1);
 
   if (config_.isMember("keyboard-name") && kbName != config_["keyboard-name"].asString())
-    return;  // ignore
+    return;  // ignore (keyboard not in config)
+  if (layoutName == "none" || layoutName == "error")
+    return;  // ignore (no layout, e.g. wtype)
 
   layoutName = waybar::util::sanitize_string(layoutName);
 
